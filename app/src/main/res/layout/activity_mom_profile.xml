@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        tools:context=".ProfileActivity">
+
+        <ImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@drawable/baseline_account_circle_24"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_account_circle_24"
+            tools:layout_editor_absoluteX="193dp"
+            tools:layout_editor_absoluteY="28dp" />
+
+        <LinearLayout
+            android:id="@+id/activitiesLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4"
+            tools:layout_editor_absoluteX="338dp"
+            tools:layout_editor_absoluteY="423dp">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/statsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteY="423dp">
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/deleteAccount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delete Account"
+            android:textColor="@android:color/holo_red_dark"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="891dp" />
+
+        <Button
+            android:id="@+id/rateApp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rate the App"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="800dp" />
+
+        <Button
+            android:id="@+id/shoppingCart"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            
+            android:text="Shopping Cart"
+            android:textColor="@android:color/white"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="497dp" />
+
+        <Button
+            android:id="@+id/termsConditions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Terms and Conditions"
+            tools:layout_editor_absoluteX="-16dp"
+            tools:layout_editor_absoluteY="843dp" />
+
+        <Button
+            android:id="@+id/deliveryAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Delivery Address"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="697dp" />
+
+        <Button
+            android:id="@+id/feedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Feedback"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="752dp" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Umesha"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="207dp"
+            tools:layout_editor_absoluteY="154dp" />
+
+        <TextView
+            android:id="@+id/badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/baseline_badge_24"
+            android:drawablePadding="4dp"
+            android:text="Bronze"
+            android:textSize="14sp"
+            tools:layout_editor_absoluteX="207dp"
+            tools:layout_editor_absoluteY="299dp" />
+
+        <Button
+            android:id="@+id/reminders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Reminders"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="545dp" />
+
+        <Button
+            android:id="@+id/ordersHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Orders History"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="649dp" />
+
+        <Button
+            android:id="@+id/editPregnancyData"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit Pregnancy Data"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="601dp" />
+
+        <ImageView
+            android:id="@+id/backArrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="Back"
+            android:src="@drawable/baseline_arrow_back_24"
+            tools:layout_editor_absoluteX="12dp"
+            tools:layout_editor_absoluteY="22dp" />
+
+        <LinearLayout
+            android:layout_width="240dp"
+            android:layout_height="65dp"
+            android:orientation="horizontal"
+            tools:layout_editor_absoluteX="122dp"
+            tools:layout_editor_absoluteY="187dp">
+
+            <TextView
+                android:id="@+id/followings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0\nFOLLOWINGS"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/posts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0\nPOSTS"
+                android:textAlignment="center" />
+
+            <TextView
+                android:id="@+id/followers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0\nFOLLOWERS"
+                android:textAlignment="center" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/editProfileButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EDIT PROFILE"
+            tools:layout_editor_absoluteX="158dp"
+            tools:layout_editor_absoluteY="239dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="338dp">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="129dp"
+            tools:layout_editor_absoluteY="338dp">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="250dp"
+            tools:layout_editor_absoluteY="338dp">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="372dp"
+            tools:layout_editor_absoluteY="338dp">
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_favorite_24"
+            tools:layout_editor_absoluteX="404dp"
+            tools:layout_editor_absoluteY="338dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_star_rate_24"
+            tools:layout_editor_absoluteX="283dp"
+            tools:layout_editor_absoluteY="338dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Posts"
+            tools:layout_editor_absoluteX="31dp"
+            tools:layout_editor_absoluteY="378dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_bookmark_24"
+            tools:layout_editor_absoluteX="162dp"
+            tools:layout_editor_absoluteY="338dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bookmarks"
+            tools:layout_editor_absoluteX="146dp"
+            tools:layout_editor_absoluteY="378dp" />
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_post_add_24"
+            tools:layout_editor_absoluteX="41dp"
+            tools:layout_editor_absoluteY="338dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Points"
+            tools:layout_editor_absoluteX="283dp"
+            tools:layout_editor_absoluteY="378dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wish List"
+            tools:layout_editor_absoluteX="396dp"
+            tools:layout_editor_absoluteY="378dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
