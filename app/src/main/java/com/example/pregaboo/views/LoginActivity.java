@@ -2,10 +2,12 @@ package com.example.pregaboo.views;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.pregaboo.R;
+
 
 public class LoginActivity extends AppCompatActivity {
     private Button buttonExpecting;
@@ -24,8 +26,12 @@ public class LoginActivity extends AppCompatActivity {
         buttonEmail = findViewById(R.id.buttonEmail);
 
         buttonExpecting.setOnClickListener(v -> {
-            // TODO: Handle expecting baby button click
+        // TODO: Handle expecting baby button click
+            Intent intent = new Intent(LoginActivity.this, LoginActivity2.class);
+            startActivity(intent);
         });
+
+
 
         buttonGoogle.setOnClickListener(v -> {
             // TODO: Handle Google sign in
