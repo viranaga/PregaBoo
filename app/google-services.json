@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "281716959223",
+    "project_id": "pregaboo",
+    "storage_bucket": "pregaboo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:281716959223:android:2cbf34fbd5c2ee56bc30f2",
+        "android_client_info": {
+          "package_name": "com.example.pregaboo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "281716959223-4p0okvj7069s1e2m2nm2ef532592hlso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pregaboo",
+            "certificate_hash": "02eb93906b553786f508c679a89327e82878d042"
+          }
+        },
+        {
+          "client_id": "281716959223-qg98f19k42uirva5lf0icehho2au79hp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjpzQCR6WVp20YBplbRmW_8d0Rj7cjxtU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "281716959223-qg98f19k42uirva5lf0icehho2au79hp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
