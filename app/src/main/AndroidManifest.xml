@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Required permissions for Firebase -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,9 +16,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PregaBoo"
         tools:targetApi="31">
+
+        <!-- Firebase services metadata -->
+        <meta-data
+            android:name="com.google.firebase.analytics.APP_ID"
+            android:value="@string/google_app_id" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/admob_app_id" />
+
         <activity
             android:name=".views.CreateAccountActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".views.LoginActivity2"
             android:exported="true" />
@@ -24,10 +43,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".views.OnboardingTwoActivity"
             android:exported="false" />
@@ -42,6 +61,9 @@
             android:exported="false" />
         <activity
             android:name=".views.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".views.DashboardActivity"
             android:exported="false" />
     </application>
 

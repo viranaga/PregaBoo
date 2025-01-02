@@ -1,53 +1,26 @@
 package com.example.pregaboo.controllers;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.example.pregaboo.database.DatabaseHelper;
 import com.example.pregaboo.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class UserController {
-    private DatabaseHelper dbHelper;
+    private FirebaseFirestore db;
 
     public UserController(Context context) {
-        dbHelper = new DatabaseHelper(context);
+        db = FirebaseFirestore.getInstance();
     }
 
-    public boolean createUser(String name, String email, String password) {
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_NAME, name);
-        values.put(DatabaseHelper.COLUMN_EMAIL, email);
-        values.put(DatabaseHelper.COLUMN_PASSWORD, password);
-
-        long result = db.insert(DatabaseHelper.TABLE_USERS, null, values);
-        db.close();
-        return result != -1;
+    public void createUser(String id, String name, String email, OnCompleteListener<Void> onCompleteListener) {
+        User user = new User(id, name, email);
+        db.collection("users").document(id).set(user).addOnCompleteListener(onCompleteListener);
     }
 
-    public User getUser(String email, String password) {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(DatabaseHelper.TABLE_USERS,
-                null,
-                DatabaseHelper.COLUMN_EMAIL + "=? AND " + DatabaseHelper.COLUMN_PASSWORD + "=?",
-                new String[]{email, password},
-                null, null, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            User user = new User(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_EMAIL)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.COLUMN_PASSWORD))
-            );
-            cursor.close();
-            db.close();
-            return user;
-        }
-
-        db.close();
-        return null;
+    public void getUser(String email, OnCompleteListener<QuerySnapshot> onCompleteListener) {
+        db.collection("users").whereEqualTo("email", email).get().addOnCompleteListener(onCompleteListener);
     }
-} 
+}
