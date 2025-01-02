@@ -50,13 +50,15 @@
             android:textColor="#FF4081"
             android:layout_marginTop="8dp" />
 
-        <TextView
+        <Button
+            android:id="@+id/sign_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
-            android:text="Login or Sign up here:"
-            android:textColor="#F2EEEE" />
+            android:text="Sign up here"
+            android:textColor="#F2EEEE"
+            android:background="@drawable/white_box_background" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -66,6 +68,7 @@
             android:layout_marginTop="16dp">
 
             <ImageButton
+                android:id="@+id/google_btn"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
                 android:layout_margin="8dp"

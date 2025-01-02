@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.pregaboo.R;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity {
     private Button buttonSkip;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(this);
 
         // Initialize views
         buttonSkip = findViewById(R.id.buttonSkip);
