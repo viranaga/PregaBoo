@@ -15,8 +15,8 @@ public class UserController {
         db = FirebaseFirestore.getInstance();
     }
 
-    public void createUser(String id, String name, String email, OnCompleteListener<Void> onCompleteListener) {
-        User user = new User(id, name, email);
+    public void createUser(String id, String name, String email, String location, OnCompleteListener<Void> onCompleteListener) {
+        User user = new User(id, name, email, location);
         db.collection("users").document(id).set(user).addOnCompleteListener(onCompleteListener);
     }
 

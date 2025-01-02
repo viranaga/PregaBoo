@@ -1,6 +1,10 @@
 package com.example.pregaboo.views;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -21,6 +25,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -104,35 +113,76 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Check if user exists in Firestore
-                            firestore.collection("users")
-                                    .document(user.getUid())
-                                    .get()
-                                    .addOnCompleteListener(task2 -> {
-                                        if (task2.isSuccessful()) {
-                                            DocumentSnapshot document = task2.getResult();
-                                            if (document != null && document.exists()) {
-                                                // Existing user - go to dashboard
-                                                goToDashboard();
-                                            } else {
-                                                // New user - save to Firestore and SQLite
-                                                User newUser = new User(
-                                                    user.getUid(),
-                                                    user.getDisplayName(),
-                                                    user.getEmail()
-                                                );
-                                                dataManager.saveUser(newUser);
-                                                goToDashboard();
-                                            }
-                                        } else {
-                                            Log.w(TAG, "Error checking user existence", task2.getException());
-                                            Toast.makeText(this, "Authentication error", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                            // Get user's location
+                            getUserLocation(user);
                         }
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void getUserLocation(FirebaseUser firebaseUser) {
+        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) 
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }
+
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, location -> {
+                    String userLocation = location != null 
+                        ? getAddressFromLocation(location) 
+                        : "Unknown Location";
+                    
+                    checkAndSaveUser(firebaseUser, userLocation);
+                })
+                .addOnFailureListener(e -> {
+                    checkAndSaveUser(firebaseUser, "Unknown Location");
+                });
+    }
+
+    private String getAddressFromLocation(Location location) {
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(
+                    location.getLatitude(), 
+                    location.getLongitude(), 
+                    1);
+            if (addresses != null && addresses.size() > 0) {
+                Address address = addresses.get(0);
+                return address.getLocality() + ", " + address.getCountryName();
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Error getting address", e);
+        }
+        return "Unknown Location";
+    }
+
+    private void checkAndSaveUser(FirebaseUser firebaseUser, String location) {
+        firestore.collection("users")
+                .document(firebaseUser.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document != null && document.exists()) {
+                            goToDashboard();
+                        } else {
+                            User newUser = new User(
+                                firebaseUser.getUid(),
+                                firebaseUser.getDisplayName(),
+                                firebaseUser.getEmail(),
+                                location
+                            );
+                            dataManager.saveUser(newUser);
+                            goToDashboard();
+                        }
+                    } else {
+                        Log.w(TAG, "Error checking user existence", task.getException());
+                        Toast.makeText(this, "Authentication error", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
