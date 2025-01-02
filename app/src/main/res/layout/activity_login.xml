@@ -13,13 +13,14 @@
         android:src="@drawable/img"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.167" />
 
     <LinearLayout
-        android:layout_width="384dp"
-        android:layout_height="264dp"
+        android:layout_width="377dp"
+        android:layout_height="325dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/rounded_corner_background"
         android:orientation="vertical"
@@ -34,6 +35,15 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/rounded_button_white"
             android:text="I AM EXPECTING A BABY"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/buttonExpecting2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/rounded_button_white"
+            android:text="I AM A MIDWIFE"
             android:textColor="@color/white" />
 
         <TextView

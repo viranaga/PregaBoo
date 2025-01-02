@@ -18,9 +18,11 @@
         android:theme="@style/Theme.PregaBoo"
         tools:targetApi="31">
         <activity
-            android:name=".views.GoogleSigningLocation"
+            android:name=".views.MidwifeLogin"
             android:exported="false" />
-        <!-- Firebase services metadata -->
+        <activity
+            android:name=".views.GoogleSigningLocation"
+            android:exported="false" /> <!-- Firebase services metadata -->
         <meta-data
             android:name="com.google.firebase.analytics.APP_ID"
             android:value="@string/google_app_id" />

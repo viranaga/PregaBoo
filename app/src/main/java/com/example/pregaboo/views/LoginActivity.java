@@ -41,19 +41,16 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore firestore;
     private DataManager dataManager;
-    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase Auth and Firestore
         mAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
         dataManager = new DataManager(this);
 
-        // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -61,14 +58,21 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Set up Google Sign In button
+        Button buttonExpecting = findViewById(R.id.buttonExpecting);
+        Button buttonMidwife = findViewById(R.id.buttonExpecting2);
         ImageButton buttonGoogle = findViewById(R.id.buttonGoogle);
-        buttonGoogle.setOnClickListener(v -> signIn());
-    }
 
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        buttonExpecting.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, LoginActivity2.class);
+            startActivity(intent);
+        });
+
+        buttonMidwife.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, MidwifeLogin.class);
+            startActivity(intent);
+        });
+
+        buttonGoogle.setOnClickListener(v -> signIn());
     }
 
     @Override
@@ -88,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
             String selectedDistrict = data.getStringExtra("selected_district");
             FirebaseUser user = mAuth.getCurrentUser();
             if (user != null && selectedDistrict != null) {
-                checkAndSaveUser(user, selectedDistrict);
+                saveNewUser(user, selectedDistrict);
             }
         }
     }
@@ -100,26 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Check if user exists in Firestore
-                            firestore.collection("users")
-                                    .document(user.getUid())
-                                    .get()
-                                    .addOnCompleteListener(userTask -> {
-                                        if (userTask.isSuccessful()) {
-                                            DocumentSnapshot document = userTask.getResult();
-                                            if (document != null && document.exists()) {
-                                                // Existing user - go directly to dashboard
-                                                goToDashboard();
-                                            } else {
-                                                // New user - show district selection
-                                                Intent intent = new Intent(this, GoogleSigningLocation.class);
-                                                startActivityForResult(intent, DISTRICT_SELECTION_REQUEST);
-                                            }
-                                        } else {
-                                            Log.w(TAG, "Error checking user", userTask.getException());
-                                            Toast.makeText(this, "Authentication error", Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
+                            checkExistingUser(user);
                         }
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -128,9 +113,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void checkAndSaveUser(FirebaseUser firebaseUser, String location) {
+    private void checkExistingUser(FirebaseUser user) {
         firestore.collection("users")
-                .document(firebaseUser.getUid())
+                .document(user.getUid())
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -138,20 +123,25 @@ public class LoginActivity extends AppCompatActivity {
                         if (document != null && document.exists()) {
                             goToDashboard();
                         } else {
-                            User newUser = new User(
-                                firebaseUser.getUid(),
-                                firebaseUser.getDisplayName(),
-                                firebaseUser.getEmail(),
-                                location
-                            );
-                            dataManager.saveUser(newUser);
-                            goToDashboard();
+                            Intent intent = new Intent(this, GoogleSigningLocation.class);
+                            startActivityForResult(intent, DISTRICT_SELECTION_REQUEST);
                         }
                     } else {
-                        Log.w(TAG, "Error checking user existence", task.getException());
+                        Log.w(TAG, "Error checking user", task.getException());
                         Toast.makeText(this, "Authentication error", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void saveNewUser(FirebaseUser firebaseUser, String district) {
+        User newUser = new User(
+            firebaseUser.getUid(),
+            firebaseUser.getDisplayName(),
+            firebaseUser.getEmail(),
+            district
+        );
+        dataManager.saveUser(newUser);
+        goToDashboard();
     }
 
     private void goToDashboard() {
@@ -159,5 +149,10 @@ public class LoginActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void signIn() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 }
