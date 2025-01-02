@@ -3,4 +3,31 @@
     <string name="default_web_client_id">1:281716959223:android:2cbf34fbd5c2ee56bc30f2</string>
     <string name="google_app_id">1:281716959223:android:2cbf34fbd5c2ee56bc30f2</string>
     <string name="admob_app_id">ca-app-pub-3940256099942544~3347511713</string>
+    <string-array name="sri_lanka_districts">
+        <item>Ampara</item>
+        <item>Anuradhapura</item>
+        <item>Badulla</item>
+        <item>Batticaloa</item>
+        <item>Colombo</item>
+        <item>Galle</item>
+        <item>Gampaha</item>
+        <item>Hambantota</item>
+        <item>Jaffna</item>
+        <item>Kalutara</item>
+        <item>Kandy</item>
+        <item>Kegalle</item>
+        <item>Kilinochchi</item>
+        <item>Kurunegala</item>
+        <item>Mannar</item>
+        <item>Matale</item>
+        <item>Matara</item>
+        <item>Monaragala</item>
+        <item>Mullaitivu</item>
+        <item>Nuwara Eliya</item>
+        <item>Polonnaruwa</item>
+        <item>Puttalam</item>
+        <item>Ratnapura</item>
+        <item>Trincomalee</item>
+        <item>Vavuniya</item>
+    </string-array>
 </resources>

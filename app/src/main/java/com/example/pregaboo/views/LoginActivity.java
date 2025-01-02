@@ -30,62 +30,43 @@ import com.google.android.gms.location.LocationServices;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import com.google.android.gms.tasks.Task;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int RC_SIGN_IN = 9001;
+    private static final int DISTRICT_SELECTION_REQUEST = 1002;
     
-    private Button buttonExpecting;
-    private ImageButton buttonGoogle;
-    private ImageButton buttonApple;
-    private ImageButton buttonEmail;
     private GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
-    private DataManager dataManager;
     private FirebaseFirestore firestore;
+    private DataManager dataManager;
+    private FusedLocationProviderClient fusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth and Firestore
         mAuth = FirebaseAuth.getInstance();
-        dataManager = new DataManager(this);
         firestore = FirebaseFirestore.getInstance();
+        dataManager = new DataManager(this);
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
-                .requestProfile()
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        buttonExpecting = findViewById(R.id.buttonExpecting);
-        buttonGoogle = findViewById(R.id.buttonGoogle);
-        buttonApple = findViewById(R.id.buttonApple);
-        buttonEmail = findViewById(R.id.buttonEmail);
-
-        buttonExpecting.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, LoginActivity2.class);
-            startActivity(intent);
-        });
-
-        buttonGoogle.setOnClickListener(v -> signInWithGoogle());
-
-        buttonApple.setOnClickListener(v -> {
-            // TODO: Handle Apple sign in
-        });
-
-        buttonEmail.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, CreateAccountActivity.class);
-            startActivity(intent);
-        });
+        // Set up Google Sign In button
+        ImageButton buttonGoogle = findViewById(R.id.buttonGoogle);
+        buttonGoogle.setOnClickListener(v -> signIn());
     }
 
-    private void signInWithGoogle() {
+    private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -95,13 +76,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data)
-                        .getResult(ApiException.class);
+                GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 Log.w(TAG, "Google sign in failed", e);
-                Toast.makeText(this, "Google sign in failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Google Sign In failed", Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == DISTRICT_SELECTION_REQUEST && resultCode == RESULT_OK) {
+            String selectedDistrict = data.getStringExtra("selected_district");
+            FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null && selectedDistrict != null) {
+                checkAndSaveUser(user, selectedDistrict);
             }
         }
     }
@@ -113,52 +100,32 @@ public class LoginActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
-                            // Get user's location
-                            getUserLocation(user);
+                            // Check if user exists in Firestore
+                            firestore.collection("users")
+                                    .document(user.getUid())
+                                    .get()
+                                    .addOnCompleteListener(userTask -> {
+                                        if (userTask.isSuccessful()) {
+                                            DocumentSnapshot document = userTask.getResult();
+                                            if (document != null && document.exists()) {
+                                                // Existing user - go directly to dashboard
+                                                goToDashboard();
+                                            } else {
+                                                // New user - show district selection
+                                                Intent intent = new Intent(this, GoogleSigningLocation.class);
+                                                startActivityForResult(intent, DISTRICT_SELECTION_REQUEST);
+                                            }
+                                        } else {
+                                            Log.w(TAG, "Error checking user", userTask.getException());
+                                            Toast.makeText(this, "Authentication error", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     } else {
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
                         Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void getUserLocation(FirebaseUser firebaseUser) {
-        if (checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) 
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        }
-
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, location -> {
-                    String userLocation = location != null 
-                        ? getAddressFromLocation(location) 
-                        : "Unknown Location";
-                    
-                    checkAndSaveUser(firebaseUser, userLocation);
-                })
-                .addOnFailureListener(e -> {
-                    checkAndSaveUser(firebaseUser, "Unknown Location");
-                });
-    }
-
-    private String getAddressFromLocation(Location location) {
-        try {
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(
-                    location.getLatitude(), 
-                    location.getLongitude(), 
-                    1);
-            if (addresses != null && addresses.size() > 0) {
-                Address address = addresses.get(0);
-                return address.getLocality() + ", " + address.getCountryName();
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "Error getting address", e);
-        }
-        return "Unknown Location";
     }
 
     private void checkAndSaveUser(FirebaseUser firebaseUser, String location) {
