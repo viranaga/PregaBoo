@@ -92,6 +92,7 @@
                     android:src="@drawable/img_29" />
 
                 <ImageButton
+                    android:id="@+id/btn_exercises"
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
@@ -119,6 +120,7 @@
                     android:contentDescription="Reminders" />
 
                 <ImageButton
+                    android:id="@+id/btn_video"
                     android:layout_width="0dp"
                     android:layout_height="150dp"
                     android:layout_columnWeight="1"
