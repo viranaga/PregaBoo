@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.example.pregaboo.controllers.UserController;
 
 public class CreateAccountActivity extends AppCompatActivity {
     private EditText emailInput;
@@ -146,30 +147,34 @@ public class CreateAccountActivity extends AppCompatActivity {
         }
 
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                        if (firebaseUser != null) {
-                            User user = new User(
-                                firebaseUser.getUid(),
-                                contact,  // Using contact as name
-                                email,
-                                district,  // Using selected district as location
-                                contact   // Adding contact number
-                            );
-
-                            dataManager.saveUser(user);
-
-                            Intent intent = new Intent(CreateAccountActivity.this, DashboardActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    } else {
-                        Toast.makeText(CreateAccountActivity.this, 
-                            "Sign up failed: " + task.getException().getMessage(),
-                            Toast.LENGTH_SHORT).show();
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                    if (firebaseUser != null) {
+                        UserController userController = new UserController(this);
+                        userController.createManualUser(
+                            firebaseUser.getUid(),
+                            contact,
+                            email,
+                            district,
+                            task2 -> {
+                                if (task2.isSuccessful()) {
+                                    Intent intent = new Intent(CreateAccountActivity.this, DashboardActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Toast.makeText(CreateAccountActivity.this,
+                                        "Failed to save user data", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        );
                     }
-                });
+                } else {
+                    Toast.makeText(CreateAccountActivity.this,
+                        "Sign up failed: " + task.getException().getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     @Override

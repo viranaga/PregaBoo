@@ -27,20 +27,20 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <EditText
+            android:id="@+id/txt_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="New user :"
-            android:background="@drawable/white_box_background"
-            android:padding="16dp" />
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="12dp" />
 
         <EditText
+            android:id="@+id/txt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:background="@drawable/white_box_background"
-            android:padding="16dp"
-            android:layout_marginTop="16dp"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:padding="12dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,6 +49,12 @@
             android:text="Forgot password?"
             android:textColor="#FF4081"
             android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login" />
 
         <Button
             android:id="@+id/sign_btn"

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.pregaboo.R;
 import com.example.pregaboo.database.DataManager;
@@ -27,6 +28,9 @@ public class LoginActivity2 extends AppCompatActivity {
     private DataManager dataManager;
     private Button signBtn;
     private ImageButton googleBtn;
+    private EditText txtUsername;
+    private EditText txtPassword;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +50,17 @@ public class LoginActivity2 extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Initialize buttons
+        // Initialize views
+        txtUsername = findViewById(R.id.txt_username);
+        txtPassword = findViewById(R.id.txt_password);
+        loginButton = findViewById(R.id.login_button);
         signBtn = findViewById(R.id.sign_btn);
         googleBtn = findViewById(R.id.google_btn);
 
+        // Add login button click listener
+        loginButton.setOnClickListener(v -> loginWithEmailPassword());
+
+        // Keep existing button listeners
         signBtn.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity2.this, CreateAccountActivity.class);
             startActivity(intent);
@@ -139,5 +150,29 @@ public class LoginActivity2 extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void loginWithEmailPassword() {
+        String email = txtUsername.getText().toString().trim();
+        String password = txtPassword.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        goToDashboard();
+                    }
+                } else {
+                    Toast.makeText(LoginActivity2.this, 
+                        "Authentication failed: " + task.getException().getMessage(),
+                        Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 }
