@@ -71,7 +71,8 @@ public class DataManager {
                 cursor.getString(cursor.getColumnIndex("firebase_id")),
                 cursor.getString(cursor.getColumnIndex("name")),
                 cursor.getString(cursor.getColumnIndex("email")),
-                cursor.getString(cursor.getColumnIndex("location"))
+                cursor.getString(cursor.getColumnIndex("location")),
+                cursor.getString(cursor.getColumnIndex("contact"))
             );
             cursor.close();
             db.close();

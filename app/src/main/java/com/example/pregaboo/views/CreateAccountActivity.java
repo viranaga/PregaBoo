@@ -58,7 +58,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         passwordInput = findViewById(R.id.password);
         contactInput = findViewById(R.id.contact_number);
         districtSpinner = findViewById(R.id.district_spinner);
-        signUpButton = findViewById(R.id.sign_btn);
+        signUpButton = findViewById(R.id.next_button);
 
         signUpButton.setOnClickListener(v -> createAccount());
     }
@@ -152,9 +152,10 @@ public class CreateAccountActivity extends AppCompatActivity {
                         if (firebaseUser != null) {
                             User user = new User(
                                 firebaseUser.getUid(),
-                                contact,
+                                contact,  // Using contact as name
                                 email,
-                                district  // Using selected district as location
+                                district,  // Using selected district as location
+                                contact   // Adding contact number
                             );
 
                             dataManager.saveUser(user);
