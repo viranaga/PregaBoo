@@ -25,6 +25,17 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/admob_app_id" />
 
+        <!-- Launcher Activity -->
+        <activity
+            android:name=".controllers.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Other Activities -->
         <activity
             android:name=".views.CreateAccountActivity"
             android:exported="true">
@@ -37,16 +48,6 @@
         <activity
             android:name=".views.LoginActivity2"
             android:exported="true" />
-
-        <activity
-            android:name=".views.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
         <activity
             android:name=".views.OnboardingTwoActivity"
             android:exported="false" />
@@ -65,6 +66,7 @@
         <activity
             android:name=".views.DashboardActivity"
             android:exported="false" />
+
     </application>
 
 </manifest>
